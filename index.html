@@ -163,6 +163,10 @@
             <a href="https://paypal.me/RubyVandomme" class="link-button" target="_blank" rel="noopener">
                 You like my art? Send energy and fuel my creativity!
             </a>
+            
+            <a href="#" class="link-button" id="chat-link">
+                💬 Chat with me
+            </a>
         </div>
 
         <p class="footer">© Ruby Vandomme</p>
@@ -173,6 +177,12 @@
         document.getElementById('artwork-link').addEventListener('click', function(e) {
             e.preventDefault();
             window.location.href = 'artwork.html';
+        });
+
+        // Telegram Link - via JavaScript (Crawler-safe)
+        document.getElementById('chat-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.open(atob('aHR0cHM6Ly90Lm1lL1J1YnlWYW5kb21tZQ=='), '_blank');
         });
     </script>
 </body>
