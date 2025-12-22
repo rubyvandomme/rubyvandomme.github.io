@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -94,6 +94,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            text-align: center;
             width: 100%;
             padding: 16px 24px;
             background: rgba(255, 255, 255, 0.85);
@@ -136,7 +137,7 @@
         <p class="profile-bio">
             Original art made by painted footprints.<br>
             🎨<br>
-            👩‍🎨🖌️ Witness the whole wonderful process, order prints, and get the original artwork!
+            👩‍🎨🖌️ Witness the whole wonderful process,<br>`n            order prints, and get the original artwork!
         </p>
 
         <div class="social-icons">
@@ -179,11 +180,7 @@
             window.location.href = 'artwork.html';
         });
 
-        // Telegram Link - via JavaScript (Crawler-safe)
-        document.getElementById('chat-link').addEventListener('click', function(e) {
-            e.preventDefault();
-            window.open(atob('aHR0cHM6Ly90Lm1lL1J1YnlWYW5kb21tZQ=='), '_blank');
-        });
+        
     </script>
 </body>
 </html>
