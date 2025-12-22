@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruby Vandomme - Artwork</title>
+    <!-- Kein Crawling erlaubt -->
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e8d5d5 0%, #f5e6e0 50%, #e8d5d5 100%);
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 680px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-image {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 16px;
+            border: 3px solid rgba(255,255,255,0.5);
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .profile-bio {
+            text-align: center;
+            color: #444;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 28px;
+            max-width: 420px;
+        }
+
+        .links {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .link-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(92, 74, 74, 0.1);
+            border-radius: 12px;
+            text-decoration: none;
+            color: #1a1a1a;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .link-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            background: #fff;
+        }
+
+        .link-button:active {
+            transform: translateY(0);
+        }
+
+        .back-link {
+            margin-top: 24px;
+            color: #5c4a4a;
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #1a1a1a;
+        }
+
+        .footer {
+            margin-top: 40px;
+            color: #888;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Profile image -->
+        <img src="profile.jpg" alt="Ruby Vandomme" class="profile-image">
+        
+        <h1 class="profile-name">Ruby Vandomme</h1>
+        
+        <p class="profile-bio">
+            My content is non-explicit, yet super sensual and classy. Yes, it's feet & soles, but in the most artsy way! Why those platforms then? They are feet-friendly!
+        </p>
+
+        <div class="links" id="link-container">
+            <!-- Links werden via JavaScript geladen (Crawler-safe) -->
+        </div>
+
+        <a href="#" class="back-link" id="back-link">
+            ← back
+        </a>
+
+        <p class="footer">© Ruby Vandomme</p>
+    </div>
+
+    <script>
+        // Links via JavaScript laden - Crawler können das nicht lesen!
+        const links = [
+            { text: '🦊 Foxy.link', url: 'aHR0cHM6Ly9mb3h5LmxpbmsvcnVieXZhbmRvbW1l' },
+            { text: '🥨 Brezzels', url: 'aHR0cHM6Ly9hcHAuYnJlenplbHMuY29tL3UvcnVieXZhbmRvbW1l' }
+        ];
+
+        // Base64 decode für extra Sicherheit
+        function decodeUrl(encoded) {
+            return atob(encoded);
+        }
+
+        const container = document.getElementById('link-container');
+        
+        links.forEach(link => {
+            const a = document.createElement('a');
+            a.href = decodeUrl(link.url);
+            a.className = 'link-button';
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.textContent = link.text;
+            container.appendChild(a);
+        });
+
+        // Zurück-Link
+        document.getElementById('back-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
