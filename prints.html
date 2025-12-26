@@ -1,0 +1,589 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruby Vandomme - Prints</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e8d5d5 0%, #f5e6e0 50%, #e8d5d5 100%);
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-image {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 16px;
+            border: 3px solid rgba(255,255,255,0.5);
+            transition: transform 0.2s;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: #444;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 32px;
+            max-width: 500px;
+        }
+
+        .original-cta {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .series-section {
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .series-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(92, 74, 74, 0.2);
+        }
+
+        .series-info {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .prints-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .print-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .print-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .print-image-container {
+            position: relative;
+            width: 100%;
+            padding-top: 100%; /* 1:1 Aspect Ratio */
+            overflow: hidden;
+        }
+
+        .print-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Watermark Overlay - Full Coverage */
+        .watermark {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: center;
+            pointer-events: none;
+            transform: rotate(-25deg);
+            gap: 20px;
+        }
+
+        .watermark::before,
+        .watermark::after {
+            content: 'Ruby Vandomme   ·   Ruby Vandomme   ·   Ruby Vandomme   ·   Ruby Vandomme   ·   Ruby Vandomme';
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+            letter-spacing: 3px;
+            white-space: nowrap;
+            display: block;
+            width: 300%;
+            text-align: center;
+        }
+
+        .watermark::after {
+            margin-top: 40px;
+        }
+
+        .watermark-line {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+            letter-spacing: 3px;
+            white-space: nowrap;
+            width: 300%;
+            text-align: center;
+        }
+
+        .print-info {
+            padding: 12px;
+            text-align: center;
+        }
+
+        .print-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .print-status {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .print-status.sold-out {
+            color: #c0392b;
+        }
+
+        .print-status.available {
+            color: #27ae60;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 80%;
+        }
+
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 8px;
+        }
+
+        /* Lightbox Watermark - Full Coverage */
+        .lightbox-watermark {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            transform: rotate(-25deg);
+            pointer-events: none;
+        }
+
+        .lightbox-watermark span {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.35);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 6px;
+            white-space: nowrap;
+        }
+
+        .lightbox-info {
+            text-align: center;
+            color: #fff;
+            margin-top: 20px;
+        }
+
+        .lightbox-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .lightbox-description {
+            font-size: 0.95rem;
+            color: #ccc;
+            margin-bottom: 16px;
+        }
+
+        .lightbox-buy-btn {
+            display: inline-block;
+            padding: 12px 32px;
+            background: #fff;
+            color: #1a1a1a;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .lightbox-buy-btn:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        .lightbox-buy-btn.sold-out {
+            background: #666;
+            color: #fff;
+            cursor: not-allowed;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
+            transition: color 0.2s;
+            z-index: 1001;
+        }
+
+        .lightbox-close:hover {
+            color: #e8d5d5;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+            padding: 20px;
+            transition: color 0.2s;
+        }
+
+        .lightbox-nav:hover {
+            color: #e8d5d5;
+        }
+
+        .lightbox-prev {
+            left: 20px;
+        }
+
+        .lightbox-next {
+            right: 20px;
+        }
+
+        .back-link {
+            margin-top: 32px;
+            color: #5c4a4a;
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #1a1a1a;
+        }
+
+        .footer {
+            margin-top: 40px;
+            color: #888;
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 600px) {
+            .prints-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .lightbox-watermark {
+                font-size: 1.5rem;
+            }
+
+            .lightbox-nav {
+                font-size: 1.5rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Profile image -->
+        <a href="index.html">
+            <img src="profile.jpeg" alt="Ruby Vandomme" class="profile-image">
+        </a>
+        
+        <h1 class="page-title">Artwork Prints</h1>
+        
+        <p class="page-subtitle">
+            Original art made by painted footprints.<br>
+            Each piece is unique. Click to view details and purchase.
+        </p>
+
+        <!-- Series #0 -->
+        <section class="series-section">
+            <h2 class="series-title">#0</h2>
+            <p class="series-info">1 piece (sold out)</p>
+            <div class="prints-grid">
+                <div class="print-item" data-index="0">
+                    <div class="print-image-container">
+                        <!-- Replace src with your image -->
+                        <img src="prints/series0-1.jpg" alt="Series #0 - Piece 1" class="print-image">
+                        <div class="watermark"></div>
+                    </div>
+                    <div class="print-info">
+                        <p class="print-name">#0</p>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="original-cta">
+            <a href="#" class="link-button" id="original-link-0">Interested in the original?</a>
+        </div>
+
+        <!-- Series #1 -->
+        <section class="series-section">
+            <h2 class="series-title">#1</h2>
+            <p class="series-info">3 pieces</p>
+            <div class="prints-grid">
+                <div class="print-item" data-index="1">
+                    <div class="print-image-container">
+                        <img src="prints/series1-1.jpg" alt="Series #1 - Piece 1" class="print-image">
+                        <div class="watermark"></div>
+                    </div>
+                    <div class="print-info">
+                        <p class="print-name">#1.1</p>
+                        
+                    </div>
+                </div>
+                <div class="print-item" data-index="2">
+                    <div class="print-image-container">
+                        <img src="prints/series1-2.jpg" alt="Series #1 - Piece 2" class="print-image">
+                        <div class="watermark"></div>
+                    </div>
+                    <div class="print-info">
+                        <p class="print-name">#1.2</p>
+                        
+                    </div>
+                </div>
+                <div class="print-item" data-index="3">
+                    <div class="print-image-container">
+                        <img src="prints/series1-3.jpg" alt="Series #1 - Piece 3" class="print-image">
+                        <div class="watermark"></div>
+                    </div>
+                    <div class="print-info">
+                        <p class="print-name">#1.3</p>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="original-cta">
+            <a href="#" class="link-button" id="original-link-1">Interested in the original?</a>
+        </div>
+
+        <a href="index.html" class="back-link">
+            ← back
+        </a>
+
+        <p class="footer">© Ruby Vandomme</p>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" id="lightbox-close">&times;</span>
+        <span class="lightbox-nav lightbox-prev" id="lightbox-prev">&#10094;</span>
+        <span class="lightbox-nav lightbox-next" id="lightbox-next">&#10095;</span>
+        <div class="lightbox-content">
+            <img src="" alt="" class="lightbox-image" id="lightbox-image">
+            <div class="lightbox-watermark">
+                <span>Ruby Vandomme · Ruby Vandomme · Ruby Vandomme</span>
+                <span>Ruby Vandomme · Ruby Vandomme · Ruby Vandomme</span>
+                <span>Ruby Vandomme · Ruby Vandomme · Ruby Vandomme</span>
+                <span>Ruby Vandomme · Ruby Vandomme · Ruby Vandomme</span>
+                <span>Ruby Vandomme · Ruby Vandomme · Ruby Vandomme</span>
+            </div>
+            <div class="lightbox-info">
+                <h3 class="lightbox-title" id="lightbox-title"></h3>
+                <p class="lightbox-description" id="lightbox-description"></p>
+                <a href="#" class="lightbox-buy-btn" id="lightbox-buy-btn" target="_blank">Buy Print</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Print data - add your Redbubble links here later
+        const prints = [
+            {
+                image: 'prints/series0-1.jpg',
+                title: '#0',
+                series: '',
+                description: '',
+                status: 'sold-out',
+                buyLink: '#' // Add Redbubble link later
+            },
+            {
+                image: 'prints/series1-1.jpg',
+                title: '#1.1',
+                series: '',
+                description: '',
+                status: 'available',
+                buyLink: '#' // Add Redbubble link later
+            },
+            {
+                image: 'prints/series1-2.jpg',
+                title: '#1.2',
+                series: '',
+                description: '',
+                status: 'available',
+                buyLink: '#' // Add Redbubble link later
+            },
+            {
+                image: 'prints/series1-3.jpg',
+                title: '#1.3',
+                series: '',
+                description: '',
+                status: 'available',
+                buyLink: '#' // Add Redbubble link later
+            }
+        ];
+
+        let currentIndex = 0;
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightbox-image');
+        const lightboxTitle = document.getElementById('lightbox-title');
+        const lightboxDescription = document.getElementById('lightbox-description');
+        const lightboxBuyBtn = document.getElementById('lightbox-buy-btn');
+
+        // Open lightbox
+        document.querySelectorAll('.print-item').forEach(item => {
+            item.addEventListener('click', () => {
+                currentIndex = parseInt(item.dataset.index);
+                showPrint(currentIndex);
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // Show print in lightbox
+        function showPrint(index) {
+            const print = prints[index];
+            lightboxImage.src = print.image;
+            lightboxImage.alt = print.title;
+            lightboxTitle.textContent = print.title;
+            lightboxDescription.textContent = print.description;
+            
+            if (print.status === 'sold-out') {
+                lightboxBuyBtn.textContent = 'Sold Out';
+                lightboxBuyBtn.classList.add('sold-out');
+                lightboxBuyBtn.href = '#';
+            } else {
+                lightboxBuyBtn.textContent = 'Buy Print';
+                lightboxBuyBtn.classList.remove('sold-out');
+                lightboxBuyBtn.href = print.buyLink;
+            }
+        }
+
+        // Close lightbox
+        document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Navigation
+        document.getElementById('lightbox-prev').addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentIndex = (currentIndex - 1 + prints.length) % prints.length;
+            showPrint(currentIndex);
+        });
+
+        document.getElementById('lightbox-next').addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentIndex = (currentIndex + 1) % prints.length;
+            showPrint(currentIndex);
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') {
+                currentIndex = (currentIndex - 1 + prints.length) % prints.length;
+                showPrint(currentIndex);
+            }
+            if (e.key === 'ArrowRight') {
+                currentIndex = (currentIndex + 1) % prints.length;
+                showPrint(currentIndex);
+            }
+        });
+    </script>
+</body>
+</html>
